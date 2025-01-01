@@ -70,8 +70,17 @@ def mapping_triangle(xi, eta, vertices):
     if (len(xi) != len(eta)):
         raise Exception("The input coordinates must have the same number of coordinates.")
 
-    x = # TODO
-    y = # TODO
+    V1 = vertices[0]
+    V2 = vertices[1]
+    V3 = vertices[2]
+
+    x = V1[0] + xi * (V2[0] - V1[0]) + eta * (V3[0] - V1[0])
+    y = V1[1] + xi * (V2[1] - V1[1]) + eta * (V3[1] - V1[1])
+
+    #We have defined the vertices' coordinates, but another way to do this if we didn't want to create this extra definition would be to access the vertices directly in x and y definition: 
+    # x = vertices[0, 0] + xi * (vertices[1, 0] - vertices[0, 0]) + eta * (vertices[2, 0] - vertices[0, 0])
+    # y = vertices[0, 1] + xi * (vertices[1, 1] - vertices[0, 1]) + eta * (vertices[2, 1] - vertices[0, 1])
+
 
     return x, y
     
@@ -176,20 +185,24 @@ def jacobian_triangle(xi, eta, vertices):
     J = numpy.zeros([n_eval_points, physical_manifold_dimension, canonical_manifold_dimension])
 
     # Compute each term of the Jacobian (note that it is the same for all points)
-    dPhi_x_d_xi =   # TODO
-    dPhi_x_d_eta =  # TODO
-    dPhi_y_d_xi =   # TODO
-    dPhi_y_d_eta =  # TODO
+    x1, y1 = vertices[0, :]
+    x2, y2 = vertices[1, :]
+    x3, y3 = vertices[2, :]
 
+    dPhi_x_d_xi =  x2-x1 #
+    dPhi_x_d_eta = x3-x1 # 
+    dPhi_y_d_xi = y2-y1  # 
+    dPhi_y_d_eta = y3-y1 # 
+    
     # Then place it in the Jacobian matrix
     # We could have made this into a 2D matrix instead of repeating the same for all points
     # This less efficient repetition is done so that you are aware that, in general, 
     # the Jacobian does not have to be the same for all points.
     # For triangles mapped by an affine transformation, the Jacobian is constant inside each 
     # element.
+    
     J[:, 0, 0] = dPhi_x_d_xi
     J[:, 0, 1] = dPhi_x_d_eta
     J[:, 1, 0] = dPhi_y_d_xi
     J[:, 1, 1] = dPhi_y_d_eta
-
     return J 

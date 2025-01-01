@@ -289,7 +289,15 @@ class Mesh:
 
         # Compute the G matrix G = (J^T) J
         J = self.jacobian(xi, eta, element_idx)
-        G = numpy.linalg.matrix_transpose(J) @ J  # @ is just the operator in numpy for matrix multiplication
+        G = numpy.zeros_like(J)  # Create an empty array for the result
+
+        for i in range(J.shape[0]):
+            J_transpose = J[i].T  # Transpose the 2x2 matrix at index i
+            G[i] = numpy.matmul(J_transpose, J[i])  # Multiply transpose with original
+
+# Now G contains the result for each quadrature point
+
+        #G =numpy.matmul(J.transpose()) @ J  # @ is just the operator in numpy for matrix multiplication
         
         return G
 
